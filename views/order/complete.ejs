@@ -1,0 +1,13 @@
+<% // views/order/complete.ejs %>
+
+<section class="section">
+  <h1>주문이 완료되었습니다 🎉</h1>
+
+  <p>주문번호: <strong>#<%= order.order_id %></strong></p>
+  <p>결제 금액: <strong><%= order.total_discounted_price.toLocaleString() %>원</strong></p>
+  <p>적립 포인트: <strong><%= order.total_earned_point.toLocaleString() %>P</strong></p>
+
+  <div style="margin-top:20px;">
+    <a href="/products">계속 쇼핑하기</a>
+  </div>
+</section>

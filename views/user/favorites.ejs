@@ -1,0 +1,43 @@
+<% // views/user/favorites.ejs %>
+
+<section class="section">
+  <h1>찜한 상품</h1>
+
+  <% if (!favorites || favorites.length === 0) { %>
+    <p>찜한 상품이 없습니다.</p>
+    <a href="/products">상품 보러가기</a>
+  <% } else { %>
+    <div class="product-grid">
+      <% favorites.forEach(f => { %>
+        <div class="product-card">
+          <a href="/products/<%= f.product_id %>">
+            <img
+              src="<%= f.thumbnail_url && f.thumbnail_url.trim() !== '' 
+                      ? f.thumbnail_url 
+                      : 'https://via.placeholder.com/400x400?text=No+Image' %>"
+              alt="<%= f.name %>"
+            />
+            <div class="product-info">
+              <div class="brand"><%= f.brand_name || '' %></div>
+              <div class="name"><%= f.name %></div>
+              <div class="price">
+                <%= (f.price || 0).toLocaleString() %>원
+                <% if (f.discount_percentage && Number(f.discount_percentage) > 0) { %>
+                  <span class="discount">(<%= f.discount_percentage %>% ↓)</span>
+                <% } %>
+              </div>
+            </div>
+          </a>
+
+          <!-- 찜 삭제는 나중에 구현 (TODO) -->
+          <!--
+          <form method="post" action="/wishlist/remove">
+            <input type="hidden" name="favoriteId" value="<%= f.favorite_id %>" />
+            <button type="submit">찜 해제</button>
+          </form>
+          -->
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</section>

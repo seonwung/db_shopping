@@ -1,0 +1,75 @@
+<% // views/products/list.ejs %>
+
+<section class="section">
+  <h1>
+    <% if (groupCode) { %>
+      <%= groupLabel %> 상품 목록
+    <% } else { %>
+      전체 상품 목록
+    <% } %>
+  </h1>
+
+  <form method="get" action="/products" class="product-filter-form">
+    <% if (groupCode) { %>
+      <input type="hidden" name="group" value="<%= groupCode %>" />
+    <% } %>
+    <input
+      type="text"
+      name="keyword"
+      placeholder="상품명 / 브랜드 검색"
+      value="<%= keyword || '' %>"
+    />
+    <button type="submit">검색</button>
+  </form>
+
+  <% if (!products || products.length === 0) { %>
+    <p>조건에 해당하는 상품이 없습니다.</p>
+  <% } else { %>
+    <div class="product-grid">
+      <% products.forEach(p => { %>
+        <div class="product-card">
+          <a href="/products/<%= p.product_id %>">
+            <img
+              src="<%= p.thumbnail_url && p.thumbnail_url.trim() !== '' 
+                      ? p.thumbnail_url 
+                      : 'https://via.placeholder.com/400x400?text=No+Image' %>"
+              alt="<%= p.name %>"
+            />
+            <div class="product-info">
+              <div class="brand"><%= p.brand_name || '' %></div>
+              <div class="name"><%= p.name %></div>
+              <div class="meta">
+                <span><%= p.group_name || '' %></span>
+                <span> / <%= p.category_name || '' %></span>
+              </div>
+              <div class="price">
+                <%= (p.price || 0).toLocaleString() %>원
+                <% if (p.discount_percentage && Number(p.discount_percentage) > 0) { %>
+                  <span class="discount">(<%= p.discount_percentage %>% ↓)</span>
+                <% } %>
+              </div>
+            </div>
+          </a>
+        </div>
+      <% }) %>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="pagination">
+      <% for (let i = 1; i <= totalPage; i++) { %>
+        <% 
+          const q = new URLSearchParams();
+          if (groupCode) q.set('group', groupCode);
+          if (keyword) q.set('keyword', keyword);
+          q.set('page', i);
+        %>
+        <a
+          href="/products?<%= q.toString() %>"
+          class="<%= i === page ? 'active' : '' %>"
+        >
+          <%= i %>
+        </a>
+      <% } %>
+    </div>
+  <% } %>
+</section>

@@ -1,0 +1,79 @@
+<% // views/products/detail.ejs %>
+
+<section class="section product-detail">
+  <div class="detail-left">
+    <img
+      src="<%= product.thumbnail_url && product.thumbnail_url.trim() !== '' 
+              ? product.thumbnail_url 
+              : 'https://via.placeholder.com/400x400?text=No+Image' %>"
+      alt="<%= product.name %>"
+    />
+  </div>
+
+  <div class="detail-right">
+    <h1><%= product.name %></h1>
+
+    <p class="brand">
+      <strong>브랜드:</strong> <%= product.brand_name || '정보 없음' %>
+    </p>
+
+    <p class="category">
+      <strong>카테고리:</strong>
+      <%= product.group_name || '' %> / <%= product.category_name || '' %>
+    </p>
+
+    <p class="price">
+      <strong>가격:</strong>
+      <%= (product.price || 0).toLocaleString() %>원
+      <% if (product.discount_percentage && Number(product.discount_percentage) > 0) { %>
+        <span class="discount">(<%= product.discount_percentage %>% 할인)</span>
+      <% } %>
+    </p>
+
+    <p class="stock">
+      <strong>재고:</strong>
+      <%= product.stock %> 개
+    </p>
+
+    <p class="desc">
+      <strong>상품 설명</strong><br />
+      <%= product.description || '상품 설명이 없습니다.' %>
+    </p>
+
+    <div class="actions">
+        <!-- 장바구니 담기 -->
+  <form method="post" action="/cart/add" style="display:inline;">
+    <input type="hidden" name="productId" value="<%= product.product_id %>" />
+    <input type="number" name="quantity" value="1" min="1" style="width:60px;" />
+    <button type="submit">장바구니 담기</button>
+  </form>
+
+  <!-- 바로구매 -->
+  <form method="post" action="/order/quick" style="display:inline; margin-left:8px;">
+    <input type="hidden" name="productId" value="<%= product.product_id %>" />
+    <input type="number" name="quantity" value="1" min="1" style="width:60px;" />
+    <button type="submit">바로구매</button>
+  </form>
+
+  <!-- 찜하기 -->
+   <form
+    method="post"
+    action="<%= isFavorite ? '/wishlist/remove' : '/wishlist/add' %>"
+    style="display:inline; margin-left:8px;"
+  >
+    <input type="hidden" name="productId" value="<%= product.product_id %>" />
+    <button
+      type="submit"
+      class="wish-btn <%= isFavorite ? 'active' : '' %>"
+    >
+      <% if (isFavorite) { %>
+        ♥ 찜함
+      <% } else { %>
+        ♡ 찜하기
+      <% } %>
+    </button>
+  </form>
+
+    </div>
+  </div>
+</section>

@@ -1,0 +1,29 @@
+<header class="topbar">
+  <div class="topbar-left">
+    <a href="/" class="logo">선웅이옷가게</a>
+
+    <nav class="menu">
+      <a href="/products?group=TOP">상의</a>
+    <a href="/products?group=BTM">하의</a>
+    <a href="/products?group=SHOES">신발</a>
+    <a href="/products?group=ACC">악세서리</a>
+    </nav>
+  </div>
+
+  <div class="topbar-right">
+    <form action="/products" method="get" class="search-form">
+      <input type="text" name="keyword" placeholder="상품 검색" />
+    </form>
+
+    <% if (currentUser) { %>
+      <span class="user-name"><%= currentUser.user_name %>님</span>
+      <form action="/auth/logout" method="post" style="display:inline;">
+        <button type="submit">로그아웃</button>
+      </form>
+      <a href="/user/mypage">마이페이지</a>
+    <% } else { %>
+      <a href="/auth/login">로그인</a>
+      <a href="/auth/register">회원가입</a>
+    <% } %>
+  </div>
+</header>

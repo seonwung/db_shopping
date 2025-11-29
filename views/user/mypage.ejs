@@ -1,0 +1,70 @@
+
+<section class="section">
+  <h1>마이페이지</h1>
+
+  <!-- 프로필 카드 -->
+  <div class="mypage-profile">
+    <h2>회원 정보</h2>
+    <p><strong>이메일:</strong> <%= profile.email %></p>
+    <p><strong>이름:</strong> <%= profile.user_name %></p>
+    <p>
+      <strong>등급:</strong>
+      <%= profile.grade_name %> (<%= profile.grade_code %>)
+    </p>
+    <p><strong>보유 포인트:</strong> <%= profile.point.toLocaleString() %> P</p>
+    <p><strong>총 구매 금액:</strong> <%= profile.total_spent.toLocaleString() %> 원</p>
+    <p><strong>가입일:</strong> <%= profile.created_at.toISOString().slice(0,10) %></p>
+
+    <% if (profile.is_admin) { %>
+      <p style="color:red;"><strong>관리자 계정</strong></p>
+    <% } %>
+  </div>
+
+  <!-- 요약 카드 -->
+  <div class="mypage-summary">
+    <div class="summary-item">
+      <h3>최근 주문</h3>
+      <p><%= orders.length %>건</p>
+      <a href="/user/orders">주문 내역 전체 보기</a>
+    </div>
+    <div class="summary-item">
+      <h3>찜한 상품</h3>
+      <p><%= favoritesCount %>개</p>
+      <a href="/user/favorites">찜 목록 보기</a>
+    </div>
+  </div>
+
+  <!-- 최근 주문 테이블 -->
+  <div class="mypage-orders">
+    <h2>최근 주문 내역</h2>
+
+    <% if (!orders || orders.length === 0) { %>
+      <p>최근 주문 내역이 없습니다.</p>
+    <% } else { %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>주문번호</th>
+            <th>상태</th>
+            <th>상품수</th>
+            <th>결제금액</th>
+            <th>적립포인트</th>
+            <th>주문일</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% orders.forEach(o => { %>
+            <tr>
+              <td>#<%= o.order_id %></td>
+              <td><%= o.order_status %></td>
+              <td><%= o.item_count %></td>
+              <td><%= o.total_discounted_price.toLocaleString() %>원</td>
+              <td><%= o.total_earned_point.toLocaleString() %>P</td>
+              <td><%= o.created_at.toISOString().slice(0, 10) %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+</section>

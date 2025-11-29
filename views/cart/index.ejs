@@ -1,0 +1,83 @@
+
+<section class="section">
+  <h1>장바구니</h1>
+
+  <% if (!items || items.length === 0) { %>
+    <p>장바구니가 비어 있습니다.</p>
+    <a href="/products">상품 보러가기</a>
+  <% } else { %>
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>상품</th>
+          <th>수량</th>
+          <th>가격</th>
+          <th>합계</th>
+          <th>삭제</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(item => { %>
+          <tr>
+            <td>
+              <a href="/products/<%= item.product_id %>">
+                <img
+                  src="<%= item.thumbnail_url && item.thumbnail_url.trim() !== '' 
+                          ? item.thumbnail_url 
+                          : 'https://via.placeholder.com/80x80?text=No+Image' %>"
+                  alt="<%= item.name %>"
+                  style="width:80px;height:80px;object-fit:cover;"
+                />
+                <div>
+                  <div class="brand"><%= item.brand_name || '' %></div>
+                  <div class="name"><%= item.name %></div>
+                </div>
+              </a>
+            </td>
+            <td>
+              <form method="post" action="/cart/update">
+                <input type="hidden" name="cartItemId" value="<%= item.cart_item_id %>" />
+                <input
+                  type="number"
+                  name="quantity"
+                  value="<%= item.quantity %>"
+                  min="1"
+                  style="width:60px;"
+                />
+                <button type="submit">변경</button>
+              </form>
+            </td>
+            <td>
+              <div>
+                <div class="price-original">
+                  <%= item.unitOriginal.toLocaleString() %>원
+                </div>
+                <div class="price-discount">
+                  <strong><%= item.unitDiscounted.toLocaleString() %>원</strong>
+                </div>
+              </div>
+            </td>
+            <td>
+              <strong><%= item.lineDiscounted.toLocaleString() %>원</strong>
+            </td>
+            <td>
+              <form method="post" action="/cart/delete">
+                <input type="hidden" name="cartItemId" value="<%= item.cart_item_id %>" />
+                <button type="submit">삭제</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <div class="cart-summary">
+      <p>정가 합계: <%= totalOriginal.toLocaleString() %>원</p>
+      <p>할인 적용 합계: <strong><%= totalDiscounted.toLocaleString() %>원</strong></p>
+
+      <form method="post" action="/order/from-cart">
+        <button type="submit">장바구니 상품 주문하기</button>
+      </form>
+    </div>
+  <% } %>
+</section>
